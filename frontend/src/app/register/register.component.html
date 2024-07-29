@@ -1,0 +1,31 @@
+
+
+<form method="post" (ngSubmit)="register()" ngNativeValidate>
+    <h2>Registracija</h2>
+
+    <div class="row">
+        <label>Korisničko ime: </label>
+        <input type="text" [(ngModel)]="username" name="username" required autofocus>
+    </div>
+
+    <div class="row">
+        <label>Lozinka: </label>
+        <input type="password" [(ngModel)]="password" name="password" required>
+    </div>
+
+    <div class="row">
+        <label>Email: </label>
+        <input type="email" [(ngModel)]="email" name="email" required>
+    </div>
+
+    <div class="row">
+        <label>Tip naloga: </label>
+        <select [(ngModel)]="role" name="role" required>
+            <option value="regular">Forumaš</option>
+            <option value="moder">Moderator</option>
+            <option value="admin">Administrator</option>
+        </select>
+    </div>
+    
+    <input type="submit" value="Registruj">    
+</form>

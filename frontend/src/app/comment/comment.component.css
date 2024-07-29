@@ -1,0 +1,22 @@
+.main-container {
+    width: 100%;
+    border: 1px black solid;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: whitesmoke;
+}
+
+p {
+    font-size: 15px;
+    padding: 10px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-radius: 0px 0px 10px 10px;
+    box-sizing: border-box;
+    font-size: 12px;
+    background-color: lightslategray;
+}

@@ -1,0 +1,71 @@
+
+
+<div class="tab-container">
+  <div class="tab-labels">
+    <label (click)="selectTab(0)" [class.active]="selectedTab === 0">Nauka</label>
+    <label (click)="selectTab(1)" [class.active]="selectedTab === 1">Kultura</label>
+    <label (click)="selectTab(2)" [class.active]="selectedTab === 2">Sport</label>
+    <label (click)="selectTab(3)" [class.active]="selectedTab === 3">Muzika</label>
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="selectedTab === 0">
+      <ul>
+        <li *ngFor="let comment of scienceRoom?.comments">
+          <app-comment
+                [comment]="comment">
+          </app-comment>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="selectedTab === 1">
+      <ul>
+        <li *ngFor="let comment of cultureRoom?.comments">
+          <app-comment
+                [comment]="comment">
+          </app-comment>
+        </li>
+      </ul>
+    </div>
+
+    <div *ngIf="selectedTab === 2">
+      <ul>
+        <li *ngFor="let comment of sportRoom?.comments">
+          <app-comment
+                [comment]="comment">
+          </app-comment>
+        </li>
+      </ul>
+    </div>
+    
+    <div *ngIf="selectedTab === 3">
+      <ul>
+        <li *ngFor="let comment of musicRoom?.comments">
+          <app-comment
+                [comment]="comment">
+          </app-comment>
+        </li>
+      </ul>
+    </div>
+
+    <div class="comment-button">
+      <button (click)="postComment()">Postavi komentar</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal" *ngIf="displayModal">
+  <div class="modal-content">
+      <span id="closeModal" class="close" (click)="closeModal()">&times;</span>
+      <h2>Postavi komentar</h2>
+      <textarea placeholder="Komentar..." [(ngModel)]="content" name="content" autofocus></textarea>
+      <div class="comment-button">
+        <button (click)="closeModal()">Pošalji</button>
+      </div>
+  </div>
+</div>
+  
+
+
+

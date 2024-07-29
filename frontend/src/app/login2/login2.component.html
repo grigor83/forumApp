@@ -1,0 +1,10 @@
+<form method="post" (ngSubmit)="login2()" ngNativeValidate>
+    <h2>Prijava</h2>
+
+    <div class="row">
+        <label>Verifikacioni kod: </label>
+        <input type="text" [(ngModel)]="code" name="code" required autofocus>
+    </div>
+    
+    <input type="submit" value="Pošalji">    
+</form>

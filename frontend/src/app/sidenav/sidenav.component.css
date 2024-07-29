@@ -1,0 +1,42 @@
+.sidenav {
+    display: flex;
+    flex-direction: column;
+    width: 150px; 
+    padding: 20px;
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0;
+    left: 20px;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    background-color: lightgreen;
+}
+
+.rounded-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 30px;
+}
+
+.sidenav a {
+    display: block;
+    padding: 10px;
+    font-size: 18px;
+    text-decoration: none;
+    color: #818181;
+    transition: 0.3s;
+}
+
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+.sidenav a.active {
+    background-color:lightslategray;
+    color: white;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}

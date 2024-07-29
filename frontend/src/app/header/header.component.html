@@ -1,0 +1,6 @@
+<header>
+    <h1>forum</h1>
+    <button *ngIf="showUserButton">{{ username }} : {{ role }}</button>
+    <button *ngIf="showRegisterButton" (click)="register()">Registracija</button>
+    <button *ngIf="showLoginButton" (click)="login()">Prijava</button>
+</header>

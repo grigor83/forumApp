@@ -1,0 +1,162 @@
+
+.tab-container {
+    width: 100%;
+    margin-top: 11px;
+}
+  
+.tab-labels {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+}
+
+label {
+    display: inline-block;
+    width : 100px;
+    border: 2px solid #ccc;
+    margin : 0px 5px;
+    padding: 6px 12px;
+    text-align: center;
+    background-color: lightgreen;
+    border-bottom: 3px solid #ccc;
+    transition: backround-color 0.8s, border-bottom 0.3s;
+    -webkit-transition: backround-color 0.8s, border-bottom 0.3s;
+}
+
+label.active {
+    font-weight: bold;
+    background-color: lightslategray;
+    border-bottom: 3px solid lightgreen;
+}
+
+.tab-content {
+    width: 80%;
+    height: 60%;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    max-height: 440px;
+    overflow-y: auto;
+    border-collapse: collapse;
+    box-sizing: border-box;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: lightslategray;
+}
+
+.register-button {
+    text-align: center;
+}
+
+button {
+    width: 150px;
+    margin-top: 35px;
+    padding: 5px;
+    background-color: lightgreen;
+    line-height: 20px;
+}
+
+.comment-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: hidden; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal content */
+.modal-content {
+    background-color: lightslategray;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    margin: 10px;
+}
+
+.row label {
+    width : 140px;
+    border: 2px solid #ccc;
+    padding: 6px 12px;
+    background-color: lightgreen;
+}
+
+input {
+    width: 220px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+input[type=submit] {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100px;
+    background-color: lightgreen;
+}
+
+input[type=checkbox] {
+    width: min-content;
+    padding: 5px;
+    margin: 0;
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
+select {
+    width: 233px;
+    padding: 5px;
+    margin-left: 5px;
+    box-sizing: border-box;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}

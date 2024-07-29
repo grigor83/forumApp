@@ -1,0 +1,39 @@
+
+form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    width: fit-content;
+    align-items: center;
+    margin-top: 50px;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: lightslategray;
+    position: relative;
+    left: calc(50% - 310px);
+}
+
+.row {
+    display: flex;
+    margin: 10px;
+}
+
+label {
+    width : 140px;
+    border: 2px solid #ccc;
+    padding: 6px 12px;
+    background-color: lightgreen;
+}
+
+input {
+    width: 220px;
+    padding: 5px;
+    margin-left: 5px;
+}
+
+input[type=submit] {
+    margin-top: 15px;
+    padding: 10px;
+    width: 100px;
+    background-color: lightgreen;
+}

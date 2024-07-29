@@ -1,0 +1,18 @@
+
+<form method="post" (ngSubmit)="login()" ngNativeValidate>
+    <h2>Prijava</h2>
+
+    <div class="row">
+        <label>Korisničko ime: </label>
+        <input type="text" [(ngModel)]="username" name="username" required autofocus>
+    </div>
+
+    <div class="row">
+        <label>Lozinka: </label>
+        <input type="password" [(ngModel)]="password" name="password" required>
+    </div>
+    
+    <input type="submit" value="Uloguj">    
+</form>
+
+
