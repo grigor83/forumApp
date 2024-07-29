@@ -1,6 +1,5 @@
 package com.grigor.forum.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,11 +42,6 @@ public class User {
     @Basic
     @Column(name = "banned")
     private boolean banned;
-
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    //@JsonBackReference
-    private Room room;
 
     @Basic
     @Column(name = "code")

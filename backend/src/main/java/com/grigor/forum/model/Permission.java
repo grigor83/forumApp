@@ -33,6 +33,8 @@ public class Permission {
     @JsonBackReference("permission-user")
     private User user;
 
+    // Ovdje sam mogao staviti i obicni Basic column, integer room_id, posto mi soba ne
+    // treba uopste na frontendu kao citav objekat. Time rjesavam i problem beskonacne rekurzije
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
