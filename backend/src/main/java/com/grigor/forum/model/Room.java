@@ -2,6 +2,7 @@ package com.grigor.forum.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.grigor.forum.validators.XSSValid;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Room {
 
     @Basic
     @Column(name = "name")
+    @XSSValid
     private String name;
 
 

@@ -7,7 +7,8 @@ import lombok.*;
 @Entity
 @Data
 @Builder
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false, exclude = "user")
+@ToString(exclude = "user")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Permission {
@@ -39,4 +40,11 @@ public class Permission {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    public Permission(boolean post, boolean edit, boolean delete, Room room, User user) {
+        this.post = post;
+        this.edit = edit;
+        this.delete = delete;
+        this.room = room;
+        this.user = user;
+    }
 }

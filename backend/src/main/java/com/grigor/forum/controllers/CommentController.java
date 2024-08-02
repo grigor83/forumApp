@@ -1,9 +1,12 @@
 package com.grigor.forum.controllers;
 
 import com.grigor.forum.model.Comment;
+import com.grigor.forum.security.WAFService;
 import com.grigor.forum.services.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +17,30 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final WAFService wafService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentService commentService, WAFService wafService) {
         this.commentService = commentService;
+        this.wafService = wafService;
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createComment(@Validated @RequestBody Comment comment, BindingResult result) {
+        wafService.checkRequest(result);
+        return ResponseEntity.ok().body(commentService.createComment(comment));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateComment(@Validated @RequestBody Comment comment, BindingResult result) {
+        wafService.checkRequest(result);
+        commentService.update(comment);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        commentService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{roomId}")
@@ -25,26 +49,4 @@ public class CommentController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-        Comment newComment = commentService.createComment(comment);
-        return new ResponseEntity<>(newComment, HttpStatus.ACCEPTED);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateComment(@PathVariable Integer id, @RequestBody Comment comment) {
-        Comment updatedComment = commentService.update(comment);
-        if (updatedComment != null)
-            return ResponseEntity.ok().build();
-        else
-            return ResponseEntity.notFound().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id) {
-        if (commentService.deleteById(id))
-            return ResponseEntity.ok().build();
-        else
-            return ResponseEntity.notFound().build();
-    }
 }

@@ -8,7 +8,7 @@ CREATE TABLE user
 (
 	id				int	 not null auto_increment,
 	username		varchar(50)		not null,
-    password		varchar(50)		not null,
+    password		varchar(200)	not null,
     email			varchar(50)		not null,
     role			varchar(10)		not null,
     verified		boolean,
@@ -52,6 +52,16 @@ CREATE TABLE permission
     FOREIGN KEY(room_id) REFERENCES room(id) ON DELETE cascade
 );
 
+DROP TABLE IF EXISTS log;
+CREATE TABLE log
+(
+	id					int	 			not null auto_increment,
+	message				varchar(70)    	not null,
+    log_date			timestamp		not null,
+    level 				varchar(10)    	not null,
+    logger 				varchar(70)    	not null,
+    PRIMARY KEY(id)
+);
 
 
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=1 */;
@@ -59,9 +69,9 @@ CREATE TABLE permission
 
 INSERT INTO room(name) VALUES ('Nauka'),('Kultura'),('Sport'),('Muzika');
 INSERT INTO user(username, password, email, role, verified, banned, code) values 
-('admin', 'admin', 'igorgrubisa@hotmail.com', 'admin', 1, 0, 0), 
-('mm', 'mm', 'igorgrubisa@hotmail.com', 'moder', 1, 0, 0),
-('jj', 'jj', 'igorgrubisa@hotmail.com', 'regular', 1, 0, 0);
+('admin', '$2a$10$UX16JKuVniDvVRfxX6sEDul.LSFGkEvLcVp38rILTOoA/2TTrOt9a', 'igorgrubisa@hotmail.com', 'admin', 1, 0, 0), 
+('mm', '$2a$10$KMBfB0DMsfyZIpxjSAGeqO/B/HuRqnp1mhBUxu7/oDXYKiPBtf2ZC', 'igorgrubisa@hotmail.com', 'moder', 1, 0, 0),
+('jj', '$2a$10$OYL2ff104Z6c7..rK5LJ0.UzUpI6jhhRg5JmkstEmH25VvwYX2gTi', 'igorgrubisa@hotmail.com', 'user', 1, 0, 0);
 insert into comment(user_id, room_id, comment_date, content) values 
 (2, 1, '2024-04-02 22:34', 'trening je bio naporan'), (3, 1, '2024-04-15 22:34', 'neki komentar'), (3, 1, '2024-05-25 22:34', 'neki komentar'), (3, 1, '2024-05-25 22:34', 'neki komentar'),
 (3, 1, '2024-05-25 22:34', 'neki komentar'),

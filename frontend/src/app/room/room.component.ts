@@ -36,28 +36,12 @@ export class RoomComponent implements OnInit {
       response.forEach(room => {
         switch(room.name){
           case 'Nauka' : this.scienceRoom = room;
-                          this.commentService.getCommentsByRoomId(this.scienceRoom.id)
-                              .subscribe(response=> {
-                                  this.scienceRoom.comments = response;
-                              });
                           break;
           case 'Kultura' : this.cultureRoom = room;
-                            this.commentService.getCommentsByRoomId(this.cultureRoom.id)
-                                .subscribe(response=> {
-                                    this.cultureRoom.comments = response;
-                                });
                           break;
           case 'Sport' : this.sportRoom = room;
-                          this.commentService.getCommentsByRoomId(this.sportRoom.id)
-                              .subscribe(response=> {
-                                  this.sportRoom.comments = response;
-                              });
                           break;
           case 'Muzika' : this.musicRoom = room;
-                            this.commentService.getCommentsByRoomId(this.musicRoom.id)
-                              .subscribe(response=> {
-                                  this.musicRoom.comments = response;
-                              });
                           break;
         }
       })

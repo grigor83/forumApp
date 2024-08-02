@@ -26,7 +26,7 @@ export class AdminComponent implements OnInit {
   newUsers : User[] = [];
   displayUserModal : boolean = false;
   isAdmin : boolean = false;
-  isRegular : boolean = false;
+  isUser : boolean = false;
   selectedUser!: User;
   username!: string | null;
   password!: string | null;
@@ -75,8 +75,10 @@ export class AdminComponent implements OnInit {
 
   register(user: User) {
     user.verified = true;
-    this.newUsers = this.newUsers.filter(u => u.id !== user.id);
-    this.userService.sendVerificationEmail(user).subscribe(response => { });
+    this.userService.verifyUser(user.id).subscribe(response => {
+      user.permissions = response;
+      this.newUsers = this.newUsers.filter(u => u.id !== user.id);
+    });
   }
 
   showUserInfo(user: User) {
@@ -103,9 +105,9 @@ export class AdminComponent implements OnInit {
       }
     });
 
-    if (this.selectedUser.role === 'regular'){
+    if (this.selectedUser.role === 'user'){
       this.isAdmin = false;
-      this.isRegular = true;
+      this.isUser = true;
     }
     this.displayUserModal = true;
   }
@@ -133,7 +135,7 @@ export class AdminComponent implements OnInit {
     this.selectedSportRoomPermissions = [];
     this.selectedUser = new User(null,null,null,null);
     this.isAdmin = false;
-    this.isRegular = false;
+    this.isUser = false;
     this.username = null;
     this.password = null;
     this.email = null;
@@ -158,17 +160,17 @@ export class AdminComponent implements OnInit {
   onSelectionChange(event: any) {
     if (this.role === 'admin'){
       this.isAdmin = true;
-      this.isRegular = false;
+      this.isUser = false;
       this.checkedAll();
     }
     else if (this.role === 'moder'){
       this.isAdmin = false;
-      this.isRegular = false;
+      this.isUser = false;
       this.checkedAll();
     }
     else {
       this.isAdmin = false;
-      this.isRegular = true;
+      this.isUser = true;
       this.checkOnlyPost();
     }
   }

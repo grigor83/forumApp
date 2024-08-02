@@ -4,11 +4,14 @@ form {
     display: flex;
     flex-direction: column;
     flex-grow: 0;
+    width: fit-content;
     align-items: center;
     margin-top: 50px;
     padding: 10px;
+    box-sizing: border-box;
     background-color: lightslategray;
-    width: fit-content;
+    position: relative;
+    left: calc(50% - 310px);
 }
 
 .row {

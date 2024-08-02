@@ -5,17 +5,17 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { Login2Component } from './login2/login2.component';
 import { RoomComponent } from './room/room.component';
-import { GuardRegularService } from './services/guard-regular.service';
-import { GuardModerService } from './services/guard-moder.service';
-import { GuardAdminService } from './services/guard-admin.service';
-import { GuardLogin2Service } from './services/guard-login2.service';
+import { userGuard } from './guards/user.guard';
+import { moderatorGuard } from './guards/moderator.guard';
+import { administratorGuard } from './guards/administrator.guard';
+import { login2Guard } from './guards/login2.guard';
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'login2', component: Login2Component, canActivate : [GuardLogin2Service] },
     { path: 'register', component: RegisterComponent },
-    { path: 'room', component: RoomComponent, canActivate : [GuardRegularService] },
-    { path: 'rooms', component: RoomsComponent, canActivate : [GuardModerService] },
-    { path: 'admin', component: AdminComponent, canActivate : [GuardAdminService] },
+    { path: 'login', component: LoginComponent },
+    { path: 'login2', component: Login2Component, canActivate : [login2Guard] },
+    { path: 'room', component: RoomComponent, canActivate : [userGuard] },
+    { path: 'rooms', component: RoomsComponent, canActivate : [moderatorGuard] },
+    { path: 'admin', component: AdminComponent, canActivate : [administratorGuard] },
     { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

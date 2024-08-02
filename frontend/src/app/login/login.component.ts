@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
+import { AuthenticationService } from '../services/authentication.service';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-login',
@@ -15,39 +17,24 @@ export class LoginComponent {
   username!: string;
   password!: string;
 
-  constructor (private router : Router, private userService : UserService) { }
+  constructor (private router : Router, private userService : UserService, private authService : AuthenticationService) { }
 
-  login() {
-    this.userService.getUsers().subscribe(response => {
-      let users = response.filter(user => user.username === this.username && user.password === this.password);
-      if (users.length === 0) {
-        alert("Neispravno korisničko ime ili lozinka!");
-        this.userService.activeUser = null;
-        this.userService.signedIn = false;
-        return;
-      }  
+  login(){
+    this.userService.logout();
 
-      if (users[0].banned){
-        alert("Zabranjen vam je pristup forumu!");
-        this.userService.activeUser = null;
+    this.authService.loginUser(this.username, this.password).subscribe(
+      response => {
+        const newUser = new User(this.username, this.password, null, null);
+        newUser.id = response;
+        this.userService.activeUser = newUser;
         this.userService.signedIn = false;
-        return;
+        alert("Unesite verifikacioni kod koji ste dobili elektronskom poštom!");
+        this.router.navigate(['/login2']); 
+      },
+      error => {
+        //alert("Uneseni kredencijali nisu validni ili je problem sa vašim nalogom!");
       }
-
-      if (!users[0].verified){
-        alert("Administrator još nije odobrio vaš nalog!");
-        this.userService.activeUser = null;
-        this.userService.signedIn = false;
-      }
-      else {
-        this.userService.activeUser = users[0];
-        this.userService.signedIn = false;
-        this.userService.sendVerificationCode(this.userService.activeUser).subscribe(response => {
-          alert("Unesite verifikacioni kod koji ste dobili elektronskom poštom!");
-          this.router.navigate(['/login2']); 
-        });
-      }
-    });
+    );
   }
 
 }

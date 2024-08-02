@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { User } from '../models/user';
+import { Permission } from '../models/permission';
 
 @Injectable({
   providedIn: 'root'
@@ -19,32 +20,18 @@ export class UserService {
     return this.http.get<User[]>(this.url);
   }
 
-  postUser(user : User) {
-    return this.http.post<User>(this.url, user);
-  }
-
-  getUserById(id: number): Observable<User> {
-    return this.http.get<User>(this.url + `/${id}`);
+  verifyUser(userId : number){
+    return this.http.put<Permission[]>(this.url + '/verify' + `/${userId}`, null);
   }
 
   updateUser(user: User): Observable<User> {
     return this.http.put<User>(`${this.url}/${user.id}`, user);    
   }
 
-  sendVerificationCode(user : User) {
-    let emailUrl = 'http://localhost:8080/email';
-    return this.http.post<User>(emailUrl, user);
-  }
-
-  sendVerificationEmail(user : User) {
-    let emailUrl = 'http://localhost:8080/email';
-    return this.http.put<User>(`${emailUrl}/${user.id}`, user);
-  }
-
   logout(){
     this.activeUser = null;
     this.signedIn = false;
+    localStorage.removeItem('token');
   }
-
 
 }

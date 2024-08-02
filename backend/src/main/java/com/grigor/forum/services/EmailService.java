@@ -15,20 +15,15 @@ import java.util.Random;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
-    private final UserService userService;
 
-    public EmailService(JavaMailSender javaMailSender, UserService userService) {
+    public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
-        this.userService = userService;
     }
 
     @Async
-    public void sendVerificationEmail(User user) {
-        user.setVerified(true);
-        userService.updateUser(user);
-
+    public void sendVerificationEmail(String userEmail) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
+        mailMessage.setTo(userEmail);
         mailMessage.setSubject("ForumApp");
         mailMessage.setText("Administrator je odobrio vaš nalog!");
 
@@ -36,14 +31,9 @@ public class EmailService {
     }
 
     @Async
-    public void sendVerificationCode(User user) {
-        Random rand = new Random();
-        int code = rand.nextInt(50) + 1;
-        user.setCode(code);
-        userService.updateUser(user);
-
+    public void sendVerificationCode(String userEmail, int code) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(user.getEmail());
+        mailMessage.setTo(userEmail);
         mailMessage.setSubject("ForumApp");
         mailMessage.setText("Vaš verifikacioni kod je: " + code);
 

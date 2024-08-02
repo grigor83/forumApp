@@ -37,7 +37,7 @@ export class SidenavComponent {
       this.showAdmin = false;
       this.showLogout = false;
     }
-    else if (this.userService.activeUser?.role === 'regular') {
+    else if (this.userService.activeUser?.role === 'user') {
       this.showRoom = true;
       this.showRooms = false;
       this.showAdmin = false;

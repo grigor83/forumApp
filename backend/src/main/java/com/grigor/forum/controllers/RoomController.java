@@ -1,7 +1,6 @@
 package com.grigor.forum.controllers;
 
-import com.grigor.forum.model.Room;
-import com.grigor.forum.repository.CommentRepository;
+import com.grigor.forum.dto.RoomDTO;
 import com.grigor.forum.services.RoomService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +20,9 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Room>> findAll() {
-        List<Room> rooms = roomService.findAll();
+    public ResponseEntity<List<RoomDTO>> findAll() {
+        List<RoomDTO> rooms = roomService.findAllRoomDTO();
         return new ResponseEntity<>(rooms, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Room> findById(@PathVariable Integer id) {
-        Room room = roomService.findById(id);
-        return new ResponseEntity<>(room, HttpStatus.OK);
-    }
 }

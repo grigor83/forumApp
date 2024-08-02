@@ -36,7 +36,7 @@
                     <td>{{ newUser.username }}</td><td>{{ newUser.password }}</td>
                     <td>{{ newUser.email }}</td><td>{{ newUser.role }}</td>
                     <td>{{ newUser.verified }}</td> 
-                    <td class="register-button"> <button (click)="register(newUser)">registruj</button> </td>
+                    <td class="register-button"> <button class="register-button" (click)="register(newUser)">registruj</button> </td>
                 </tr>
             </tbody>
         </table>
@@ -72,7 +72,7 @@
                               [value]="perm"
                               (change)="onCheckboxChange(selectedScienceRoomPermissions, perm, $event)"
                               [checked]="selectedScienceRoomPermissions.includes(perm)"
-                              [disabled]="isAdmin || (isRegular && (perm === 'edit' || perm === 'delete'))"
+                              [disabled]="isAdmin || (isUser && (perm === 'edit' || perm === 'delete'))"
                             /> {{ perm }}
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                               [value]="perm"
                               (change)="onCheckboxChange(selectedSportRoomPermissions, perm, $event)"
                               [checked]="selectedSportRoomPermissions.includes(perm)"
-                              [disabled]="isAdmin || (isRegular && (perm === 'edit' || perm === 'delete'))"
+                              [disabled]="isAdmin || (isUser && (perm === 'edit' || perm === 'delete'))"
                             /> {{ perm }}
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                     <div class="row">
                         <label>Tip naloga: </label>
                         <select [(ngModel)]="role" name="role" (change)="onSelectionChange($event)">
-                            <option value="regular">forumaš</option>
+                            <option value="user">forumaš</option>
                             <option value="moder">moderator</option>
                             <option value="admin">administrator</option>
                         </select>
@@ -120,7 +120,7 @@
                               [value]="perm"
                               (change)="onCheckboxChange(selectedCultureRoomPermissions, perm, $event)"
                               [checked]="selectedCultureRoomPermissions.includes(perm)"
-                              [disabled]="isAdmin || (isRegular && (perm === 'edit' || perm === 'delete'))"
+                              [disabled]="isAdmin || (isUser && (perm === 'edit' || perm === 'delete'))"
                             /> {{ perm }}
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                               [value]="perm"
                               (change)="onCheckboxChange(selectedMusicRoomPermissions, perm, $event)"
                               [checked]="selectedMusicRoomPermissions.includes(perm)"
-                              [disabled]="isAdmin || (isRegular && (perm === 'edit' || perm === 'delete'))"
+                              [disabled]="isAdmin || (isUser && (perm === 'edit' || perm === 'delete'))"
                             /> {{ perm }}
                         </div>
                     </div>

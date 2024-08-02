@@ -1,10 +1,14 @@
 package com.grigor.forum.services;
 
+import com.grigor.forum.exceptions.*;
+import com.grigor.forum.model.Permission;
 import com.grigor.forum.model.User;
+import com.grigor.forum.model.UserRole;
 import com.grigor.forum.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,31 +16,63 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final RoomService roomService;
+    private final PermissionService permissionService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, EmailService emailService,
+                       RoomService roomService, PermissionService permissionService) {
         this.userRepository = userRepository;
+        this.emailService = emailService;
+        this.roomService = roomService;
+        this.permissionService = permissionService;
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public void updateUser(User user) {
+        User u = userRepository.findById(user.getId())
+                .orElseThrow(NotFoundException::new);
+
+        u.setUsername(user.getUsername());
+        u.setPassword(user.getPassword());
+        u.setBanned(user.isBanned());
+        u.setEmail(user.getEmail());
+        u.setRole(user.getRole());
+
+        List<Permission> newPermissions = new ArrayList<>();
+        user.getPermissions().forEach(perm -> {
+                    newPermissions.add(permissionService.updatePermission(perm));
+                }
+        );
+
+        u.setPermissions(newPermissions);
+        //return userRepository.save(user);
     }
 
-    public User updateUser(User newUser) {
-        User user = userRepository.findById(newUser.getId())
-                .orElse(null);
-        if (user == null)
-            return null;
+    public List<Permission> verifyUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(NotFoundException::new);
 
-        user = newUser;
-        return userRepository.save(user);
-    }
+        // postavi mu sve permisije u skladu sa rolom
+        roomService.findAll().forEach(room -> {
+            if (user.getRole().equals(UserRole.ADMIN.toString().toLowerCase())
+                    || user.getRole().equals(UserRole.MODER.toString().toLowerCase())) {
+                Permission perm = new Permission(true, true, true, room, user);
+                permissionService.createPermission(perm);
+                user.getPermissions().add(perm);
+            }
+            else {
+                Permission perm = new Permission(true, false, false, room, user);
+                permissionService.createPermission(perm);
+                user.getPermissions().add(perm);
+            }
+        });
+        user.setVerified(true);
+        emailService.sendVerificationEmail(user.getEmail());
 
-    public User findById(Integer id) {
-        return userRepository.findById(id)
-                .orElse(null);
+        return user.getPermissions();
     }
 }

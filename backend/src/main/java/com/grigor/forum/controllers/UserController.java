@@ -1,9 +1,13 @@
 package com.grigor.forum.controllers;
 
+import com.grigor.forum.model.Permission;
 import com.grigor.forum.model.User;
+import com.grigor.forum.security.WAFService;
 import com.grigor.forum.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +18,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final WAFService wafService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, WAFService wafService) {
         this.userService = userService;
+        this.wafService = wafService;
     }
 
     @GetMapping
@@ -25,27 +31,18 @@ public class UserController {
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable Integer id) {
-        User user = userService.findById(id);
-        if (user != null)
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        else
-            return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.createUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.ACCEPTED);
+    @PutMapping("/verify/{id}")
+    public ResponseEntity<List<Permission>> verifyUser(@PathVariable Integer id) {
+        List<Permission> userPermissions = userService.verifyUser(id);
+        return new ResponseEntity<>(userPermissions, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Integer id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(user);
-        if (updatedUser != null)
-            return ResponseEntity.ok().build();
-        else
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> updateUser(@PathVariable Integer id, @Validated @RequestBody User user,
+                                        BindingResult result) {
+        // Perform changing user role, permissions and banned
+        wafService.checkRequest(result);
+        userService.updateUser(user);
+        return ResponseEntity.ok().build();
     }
 }

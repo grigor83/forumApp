@@ -1,5 +1,6 @@
 package com.grigor.forum.services;
 
+import com.grigor.forum.exceptions.NotFoundException;
 import com.grigor.forum.model.Permission;
 import com.grigor.forum.repository.PermissionRepository;
 import jakarta.transaction.Transactional;
@@ -14,7 +15,18 @@ public class PermissionService {
         this.permissionRepository = permissionRepository;
     }
 
-    public Permission createPermission(Permission permission) {
-        return permissionRepository.save(permission);
+    public void createPermission(Permission permission) {
+        permissionRepository.save(permission);
+    }
+
+    public Permission updatePermission(Permission permission){
+        Permission perm = permissionRepository.findById(permission.getId())
+                                .orElseThrow(NotFoundException::new);
+
+        perm.setPost(permission.isPost());
+        perm.setEdit(permission.isEdit());
+        perm.setDelete(permission.isDelete());
+
+        return permissionRepository.save(perm);
     }
 }

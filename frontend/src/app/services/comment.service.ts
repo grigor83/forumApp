@@ -12,19 +12,19 @@ export class CommentService {
 
   constructor(private http : HttpClient) { }
 
-  getCommentsByRoomId(roomId: number | undefined): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.url}/${roomId}`);
-  }
-
   postComment(comment : Comment) {
     return this.http.post<Comment>(this.url, comment);
   }
 
   updateComment(comment: Comment): Observable<Comment> {
-    return this.http.put<Comment>(`${this.url}/${comment.id}`, comment);    
+    return this.http.put<any>(`${this.url}`, comment);    
   }
 
   deleteComment(id : number): Observable<string> {
     return this.http.delete<string>(`${this.url}/${id}`);
+  }
+
+  getCommentsByRoomId(roomId: number | undefined): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.url}/${roomId}`);
   }
 }
