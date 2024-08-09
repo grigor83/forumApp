@@ -13,6 +13,7 @@ export const requestInterceptor: HttpInterceptorFn = (req, next) => {
         }
       });
     }
+    
   }
 
   // Pass the cloned request with the updated header to the next handler
@@ -24,12 +25,14 @@ export const requestInterceptor: HttpInterceptorFn = (req, next) => {
         const errorMessage = `Error Code: ${restError.status}\nError: ${restError.error}\nMessage: ${restError.message}\nPath: ${restError.path}`;
         console.log(errorMessage);
 
-        if (restError.error === 'Invalid credentials')
+        if (restError.error === 'Invalid credentials' || restError.message === 'Bad credentials')
             alert("Uneseni kredencijali nisu validni!");
         else if (restError.error === 'Username already exists')
             alert("Korisničko ime je već zauzeto!");
         else if (restError.error === 'Invalid account')
             alert("Vaš nalog nije validan!");
+        else if (restError.error === 'Invalid format input')
+          alert("Format unesenog podatka nije validan!");
         else if (restError.error === 'Malicious request')
           alert("Detektovan je potencijalno maliciozan zahtjev!");
         else

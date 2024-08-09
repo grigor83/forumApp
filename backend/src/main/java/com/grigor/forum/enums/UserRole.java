@@ -1,4 +1,4 @@
-package com.grigor.forum.model;
+package com.grigor.forum.enums;
 
 public enum UserRole {
     ADMIN, MODER, USER

@@ -30,8 +30,10 @@ public class XSSValidator implements ConstraintValidator<XSSValid, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         for (Pattern pattern : XSS_PATTERNS){
-            if (pattern.matcher(value).find())
+
+            if (pattern.matcher(value).find()){
                 return false;
+            }
         }
 
         return true;

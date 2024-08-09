@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { Comment } from '../models/comment';
 import { Permission } from '../models/permission';
 import { RoomService } from '../services/room.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-room',
@@ -29,7 +30,7 @@ export class RoomComponent implements OnInit {
   content!: string | null;
 
   constructor(private userService : UserService, private commentService : CommentService,
-              private datePipe : DatePipe, private roomService : RoomService) { }
+              private roomService : RoomService, private router : Router) { }
 
   ngOnInit(): void {
     this.roomService.getRooms().subscribe(response => {
@@ -74,11 +75,17 @@ export class RoomComponent implements OnInit {
 
     if (this.content != null){
       if (this.userService.activeUser !== null){
-        const date = this.datePipe.transform(new Date(), 'dd.MM.yyyy. HH:mm');
-        const comment = new Comment(date, this.content, this.userService.activeUser, room);
+        const comment = new Comment(null, this.content, this.userService.activeUser.id,
+          this.userService.activeUser.username, room.id);
         this.content = null;
-        this.commentService.postComment(comment).subscribe(response => {
-          room.comments.push(response);
+        this.commentService.postComment(comment).subscribe({
+          next: (response) => {
+            room.comments.push(response);
+          },
+          error: (error) => {
+            this.userService.logout();
+            this.router.navigate(['/login']); 
+          }
         });
       }
     }

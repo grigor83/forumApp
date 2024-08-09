@@ -10,7 +10,7 @@ import { Permission } from '../models/permission';
 
 export class UserService {
   
-  private url = 'http://localhost:8080/users';
+  private url = 'https://localhost:8443/users';
   public activeUser: User | null = null;
   public signedIn: boolean = false;
 

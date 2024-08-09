@@ -8,16 +8,26 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class CommentService {
 
-  private url = 'http://localhost:8080/comments';
+  private url = 'https://localhost:8443/comments';
 
   constructor(private http : HttpClient) { }
 
   postComment(comment : Comment) {
-    return this.http.post<Comment>(this.url, comment);
+    return this.http.post<Comment>(this.url, {
+      id: comment.id,
+      content: comment.content,
+      username: comment.username,
+      roomId: comment.roomId
+    });
   }
 
   updateComment(comment: Comment): Observable<Comment> {
-    return this.http.put<any>(`${this.url}`, comment);    
+    return this.http.put<any>(`${this.url}`, {
+      id: comment.id,
+      content: comment.content,
+      username: comment.username,
+      roomId: 0
+    });    
   }
 
   deleteComment(id : number): Observable<string> {

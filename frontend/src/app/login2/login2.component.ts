@@ -31,6 +31,7 @@ export class Login2Component {
             newUser.banned = response.banned;
             this.userService.activeUser = newUser;
             this.userService.signedIn = true;
+            
             if (localStorage !== undefined)
               localStorage.setItem('token', response.token);
           

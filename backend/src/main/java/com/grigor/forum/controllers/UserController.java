@@ -40,7 +40,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @Validated @RequestBody User user,
                                         BindingResult result) {
-        // Perform changing user role, permissions and banned
+        // This method is used for changing user role, permissions and banned
         wafService.checkRequest(result);
         userService.updateUser(user);
         return ResponseEntity.ok().build();

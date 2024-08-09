@@ -27,19 +27,14 @@ public class Comment {
     @Basic
     @Column(name = "comment_date")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="dd.MM.yyyy. HH:mm")
-    @NotNull
     private LocalDateTime date;
 
     @Basic
     @Column(name = "content")
-    @NotBlank
-    @Size(max = 2000)
-    @XSSValid
     private String content;
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    @NotNull
     //@JsonBackReference
     //@JsonBackReference: This annotation is used on the child side of the relationship. It indicates
     // that this part of the relationship is the back reference, and it should be ignored during
@@ -48,6 +43,5 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @NotNull
     private User user;
 }

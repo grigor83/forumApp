@@ -3,7 +3,7 @@ package com.grigor.forum.services;
 import com.grigor.forum.exceptions.*;
 import com.grigor.forum.model.Permission;
 import com.grigor.forum.model.User;
-import com.grigor.forum.model.UserRole;
+import com.grigor.forum.enums.UserRole;
 import com.grigor.forum.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

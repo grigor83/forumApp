@@ -10,6 +10,7 @@ import { CommentService } from '../services/comment.service';
 import { Permission } from '../models/permission';
 import { UserService } from '../services/user.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rooms',
@@ -31,11 +32,11 @@ export class RoomsComponent implements OnInit {
   displayPostModal : boolean = false;
   displayEditModal : boolean = false;
   content!: string | null;
-  selectedComment: Comment = new Comment(null, null, null, null);
+  selectedComment: Comment = new Comment(null, null, 0, null, 0);
   userPermission!: Permission | null;
 
   constructor(private roomService : RoomService, private commentService : CommentService,
-              private userService : UserService, private datePipe : DatePipe) {}
+              private userService : UserService, private router : Router) {}
 
   ngOnInit(): void {
     this.roomService.getRooms().subscribe(response => {
@@ -89,11 +90,17 @@ export class RoomsComponent implements OnInit {
 
     if (this.content != null){
       if (this.userService.activeUser !== null){
-        const date = this.datePipe.transform(new Date(), 'dd.MM.yyyy. HH:mm');
-        const comment = new Comment(date, this.content, this.userService.activeUser, room);
+        const comment = new Comment(null, this.content, this.userService.activeUser.id,
+          this.userService.activeUser.username, room.id);
         this.content = null;
-        this.commentService.postComment(comment).subscribe(response => {
-          room.comments.push(response);
+        this.commentService.postComment(comment).subscribe({
+          next: (response) => {
+            room.comments.push(response);
+          },
+          error: (error) => {
+            this.userService.logout();
+            this.router.navigate(['/login']); 
+          }
         });
       }
     }
@@ -119,7 +126,7 @@ export class RoomsComponent implements OnInit {
   }
 
   closeEditModal() {
-    this.selectedComment = new Comment(null,null,null,null);
+    this.selectedComment = new Comment(null,null,0,null,0);
     this.userPermission = null;
     this.displayEditModal = false;
   }
@@ -127,8 +134,14 @@ export class RoomsComponent implements OnInit {
   updateComment(){
     if (this.userService.activeUser?.role === 'admin' || 
                         this.userPermission?.edit){
-      this.commentService.updateComment(this.selectedComment).subscribe(response => {
-        this.closeEditModal();
+      this.commentService.updateComment(this.selectedComment).subscribe({
+          next: (response) => {
+                    this.closeEditModal();
+                },
+          error: (error) => {
+                    this.userService.logout();
+                    this.router.navigate(['/login']); 
+                  }
       });
     }
     else {
@@ -143,13 +156,13 @@ export class RoomsComponent implements OnInit {
           this.userPermission?.delete){
       this.commentService.deleteComment(this.selectedComment.id)
           .subscribe(response => {
-              this.commentService.getCommentsByRoomId(this.selectedComment.room?.id)
+              this.commentService.getCommentsByRoomId(this.selectedTab+1)
                   .subscribe(response=> {
-                    if (this.scienceRoom.id === this.selectedComment.room?.id)
+                    if (this.scienceRoom.id === this.selectedTab+1)
                       this.scienceRoom.comments = response;
-                    else if (this.cultureRoom.id === this.selectedComment.room?.id)
+                    else if (this.cultureRoom.id === this.selectedTab+1)
                       this.cultureRoom.comments = response;
-                    else if (this.sportRoom.id === this.selectedComment.room?.id)
+                    else if (this.sportRoom.id === this.selectedTab+1)
                       this.sportRoom.comments = response;
                     else
                       this.musicRoom.comments = response;
@@ -162,7 +175,7 @@ export class RoomsComponent implements OnInit {
     alert("Nemate dozvolu da obrišete komentar!")
     this.closeEditModal();
     return;
-  }    
+    }    
   }
 
   getPermissionForRoom(){

@@ -1,6 +1,5 @@
 package com.grigor.forum.controllers;
 
-import com.grigor.forum.model.Comment;
 import com.grigor.forum.security.WAFService;
 import com.grigor.forum.services.CommentService;
 import org.springframework.http.HttpStatus;
@@ -25,15 +24,17 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createComment(@Validated @RequestBody Comment comment, BindingResult result) {
+    public ResponseEntity<?> createComment(@Validated @RequestBody CommentService.CommentRequest request,
+                                           BindingResult result) {
         wafService.checkRequest(result);
-        return ResponseEntity.ok().body(commentService.createComment(comment));
+        return ResponseEntity.ok().body(commentService.createComment(request));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateComment(@Validated @RequestBody Comment comment, BindingResult result) {
+    public ResponseEntity<?> updateComment(@Validated @RequestBody CommentService.CommentRequest request,
+                                           BindingResult result) {
         wafService.checkRequest(result);
-        commentService.update(comment);
+        commentService.update(request);
         return ResponseEntity.ok().build();
     }
 
@@ -44,8 +45,8 @@ public class CommentController {
     }
 
     @GetMapping("/{roomId}")
-    public ResponseEntity<List<Comment>> findByRoomId(@PathVariable Integer roomId) {
-        List<Comment> comments = commentService.getLatestCommentsByRoomId(roomId);
+    public ResponseEntity<List<CommentService.CommentResponse>> findByRoomId(@PathVariable Integer roomId) {
+        List<CommentService.CommentResponse> comments = commentService.getLatestCommentsByRoomId(roomId);
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 

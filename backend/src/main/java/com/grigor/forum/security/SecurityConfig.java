@@ -1,10 +1,8 @@
 package com.grigor.forum.security;
 
-import com.grigor.forum.exceptions.CustomAccessDeniedHandler;
-import com.grigor.forum.exceptions.CustomAuthenticationEntryPoint;
-import com.grigor.forum.model.UserRole;
+import com.grigor.forum.enums.UserRole;
+import com.grigor.forum.exceptions.GlobalExceptionHandler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,12 +20,7 @@ public class SecurityConfig {
 
     private final JWTAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-
-    @Autowired
-    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
-    @Autowired
-    private CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final GlobalExceptionHandler globalExceptionHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,10 +43,13 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+
         http.exceptionHandling(exceptionHandling -> exceptionHandling
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(globalExceptionHandler)
+                //.accessDeniedHandler(customAccessDeniedHandler)
         );
+
         return http.build();
     }
+
 }

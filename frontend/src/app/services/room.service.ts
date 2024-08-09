@@ -8,7 +8,7 @@ import { Room } from '../models/room';
 })
 
 export class RoomService {
-  private url = 'http://localhost:8080/rooms';
+  private url = 'https://localhost:8443/rooms';
 
   constructor(private http: HttpClient) { }
 

@@ -49,7 +49,7 @@ public class ApplicationConfig {
 
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults(){
-        // Eliminise prefix ROLE_
+        // Eliminate prefix ROLE_
         return  new GrantedAuthorityDefaults("");
     }
 

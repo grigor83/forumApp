@@ -10,25 +10,48 @@ package com.grigor.forum.exceptions;
 // nacin se Log objekat smjesta u bazu podataka.
 // Ova klasa sluzi kao SIEM service iz projektnog zadatka.
 
-import com.grigor.forum.model.LogLevel;
+import com.grigor.forum.enums.LogLevel;
 import com.grigor.forum.services.LogService;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.IOException;
+import java.security.SignatureException;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler implements AuthenticationEntryPoint {
 
     private final LogService logService;
 
     public GlobalExceptionHandler(LogService logService) {
         this.logService = logService;
+    }
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException, ServletException {
+        // This is invoked when user tries to access a secured REST resource without supplying any credentials
+        //response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getOutputStream().println("{ \"timestamp\": \"" + LocalDateTime.now() + "\", " +
+                "\"status\": " + HttpServletResponse.SC_UNAUTHORIZED + ", " +
+                "\"error\": \"Unauthorized access\", " +
+                "\"message\": \"" + authException.getMessage() + "\", " +
+                //"\"path\": \"" + request.getRequestURI() + "\" }");
+                "\"path\": \" /error\" }");
+
+        logService.saveLog(authException.getMessage(), String.valueOf(this.getClass()), LogLevel.WARNING.toString());
     }
 
     @ExceptionHandler(value = UsernameAlreadyExistsException.class)
@@ -87,11 +110,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = UnauthorizedException.class)
     public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException ex, WebRequest request) {
         logService.saveLog(ex.getMessage(), String.valueOf(ex.getClass()), LogLevel.WARNING.toString());
+
         RestError restError = new RestError(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Unauthorized access",
                 ex.getMessage()
         );
+
         return new ResponseEntity<>(restError, HttpStatus.UNAUTHORIZED);
     }
 
@@ -118,6 +143,59 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(restError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleInvalidFormat(HttpMessageNotReadableException ex) {
+        logService.saveLog("Format of input is not valid!", String.valueOf(this.getClass()), LogLevel.INFO.toString());
+
+        RestError restError = new RestError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid format input",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(restError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<?> handleExpiredJwtException(ExpiredJwtException ex) {
+        logService.saveLog("The JWT token has expired!", String.valueOf(this.getClass()), LogLevel.INFO.toString());
+
+        RestError restError = new RestError(
+                HttpStatus.FORBIDDEN.value(),
+                "The JWT token has expired",
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(restError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<?> handleSignatureException(SignatureException ex) {
+        logService.saveLog("The JWT signature is invalid!",
+                String.valueOf(this.getClass()), LogLevel.INFO.toString());
+
+        RestError restError = new RestError(
+                HttpStatus.FORBIDDEN.value(),
+                "The JWT signature is invalid!",
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(restError, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGenericException(Exception ex) {
+        logService.saveLog("Unknown internal server error!",
+                String.valueOf(this.getClass()), LogLevel.INFO.toString());
+
+        RestError restError = new RestError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Unknown internal server error",
+                ex.getMessage()
+        );
+
+        return new ResponseEntity<>(restError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

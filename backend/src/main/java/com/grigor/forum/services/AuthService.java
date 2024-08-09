@@ -10,6 +10,8 @@ import com.grigor.forum.model.User;
 import com.grigor.forum.repository.UserRepository;
 import com.grigor.forum.security.JwtService;
 import jakarta.transaction.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +26,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, JwtService jwtService) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService,
+                       JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     public void registerUser(RegisterRequest registerRequest) {
@@ -47,17 +52,18 @@ public class AuthService {
     }
 
     public Integer loginUser(LoginRequest loginRequest) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
         User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(BadCredentialsException::new);
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
-            throw new BadCredentialsException();
         if (user.isBanned() || !user.isVerified())
             throw new AccountStatusException();
 
         Random rand = new Random();
         int code = rand.nextInt(50) + 1;
         user.setCode(code);
-        //Ne trebam uraditi update, automatski je odradjeno u bazi
+        //Ne trebam uraditi update, automatski je odradjeno u bazi zato sto koristim @Transactional
         //updateUser(u);
         this.emailService.sendVerificationCode(user.getEmail(), code);
 

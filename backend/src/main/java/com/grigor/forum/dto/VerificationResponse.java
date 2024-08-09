@@ -28,7 +28,7 @@ public class VerificationResponse {
     private boolean banned;
 
     @NotBlank
-    @Pattern(regexp = "^(admin|moder|regular)")
+    @Pattern(regexp = "^(admin|moder|user)")
     private String role;
 
     @NotBlank

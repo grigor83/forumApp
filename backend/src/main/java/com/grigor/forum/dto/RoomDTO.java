@@ -1,6 +1,7 @@
 package com.grigor.forum.dto;
 
 import com.grigor.forum.model.Comment;
+import com.grigor.forum.services.CommentService;
 import lombok.*;
 
 import java.util.List;
@@ -13,5 +14,5 @@ import java.util.List;
 public class RoomDTO {
     Integer id;
     String name;
-    List<Comment> comments;
+    List<CommentService.CommentResponse> comments;
 }

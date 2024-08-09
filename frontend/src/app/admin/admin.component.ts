@@ -91,7 +91,7 @@ export class AdminComponent implements OnInit {
 
     this.isAdmin = user.role === 'admin'; 
     this.selectedUser.permissions.forEach(perm => {
-      if (perm.room?.id === this.scienceRoom.id){
+      if (perm.room?.id   === this.scienceRoom.id){
         this.displayRoomPermissions(perm, this.selectedScienceRoomPermissions, this.scienceRoom.id);
       }
       else if (perm.room?.id === this.cultureRoom.id){
