@@ -82,6 +82,10 @@ export class AdminComponent implements OnInit {
   }
 
   showUserInfo(user: User) {
+    if (user.username === 'admin'){
+      alert("Ne možete pristupiti ovom nalogu!");
+      return;
+    }
     this.selectedUser = user;
     this.username = user.username;
     this.password = user.password;
